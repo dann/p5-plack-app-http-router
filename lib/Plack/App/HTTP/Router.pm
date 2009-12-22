@@ -39,6 +39,7 @@ sub call {
 sub dispatch_to_controller {
     my ( $self, $controller_name, $action, $params, $req ) = @_;
 
+    # TODO controller once
     Plack::Util::load_class($controller_name);
     my $controller = $controller_name->new;
     if ( $controller->can($action) ) {
@@ -61,7 +62,6 @@ sub return_505 {
 sub return_404 {
     return [ 404, [ 'Content-Type' => 'text/html' ], ['Not Found'] ];
 }
-
 
 sub show_routes {
     my $self = shift;
