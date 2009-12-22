@@ -39,11 +39,7 @@ sub call {
 sub dispatch_to_controller {
     my ( $self, $controller_name, $action, $params, $req ) = @_;
 
-    eval "require $controller_name";
-    if ($@) {
-        return $self->return_505($@);
-    }
-
+    Plack::Util::load_class($controller_name);
     my $controller = $controller_name->new;
     if ( $controller->can($action) ) {
         my $res = $controller->$action( $req, $params );
@@ -69,11 +65,7 @@ sub return_404 {
 
 sub show_routes {
     my $self = shift;
-    eval "require Text::SimpleTable";
-    if ($@) {
-        print "Text::SimpleTable is required to show routes";
-    }
-
+    Plack::Util::load_class("Text::SimpleTable");
     my $t = Text::SimpleTable->new(
         [ 50, 'path' ],
         [ 10, 'method' ],
