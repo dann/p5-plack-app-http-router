@@ -9,7 +9,9 @@ my $router = router {
       match '/{controller}/{action}/{id}.{format}';
       match '/{controller}/{action}/{id}';
 };
-my $app = Plack::App::HTTP::Router->new({ router => $router} )->to_app;
+my $router_app = Plack::App::HTTP::Router->new({ router => $router} );
+$router_app->show_routes;
+my $app = $router_app->to_app;
 
 builder {
     enable "Plack::Middleware::StackTrace";

@@ -66,6 +66,35 @@ sub return_404 {
     return [ 404, [ 'Content-Type' => 'text/html' ], ['Not Found'] ];
 }
 
+
+sub show_routes {
+    my $self = shift;
+    eval "require Text::SimpleTable";
+    if ($@) {
+        print "Text::SimpleTable is required to show routes";
+    }
+
+    my $t = Text::SimpleTable->new(
+        [ 50, 'path' ],
+        [ 10, 'method' ],
+        [ 10, 'controller' ],
+        [ 10, 'action' ]
+    );
+    foreach my $route ( $self->router->routes ) {
+        my $methods = $route->conditions->{method};
+        $t->row(
+            $route->path, $methods,
+            $route->params->{controller},
+            $route->params->{action}
+        );
+    }
+    my $header = 'Dispatch Table:' . "\n";
+    my $body = $t->draw;
+    print $header . $body . "\n";
+}
+ 
+1;
+
 1;
 __END__
 
