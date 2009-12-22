@@ -44,18 +44,10 @@ sub dispatch_to_controller {
         return $self->return_505($@);
     }
 
-    my $res;
-    $res = eval {
-        my $controller = $controller_name->new;
-        if ( $controller->can($action) ) {
-            $res = $controller->$action( $req, $params );
-            return $res;
-        }
-    };
-    return $res if $res;
-
-    if ($@) {
-        return $self->return_505($@);
+    my $controller = $controller_name->new;
+    if ( $controller->can($action) ) {
+        my $res = $controller->$action( $req, $params );
+        return $res;
     }
     return;
 }
